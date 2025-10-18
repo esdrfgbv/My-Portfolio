@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Project | Portfolio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="form-page">
+<div class="form-container">
+  <h1>Edit Project</h1>
+  <form id="editForm">
+    <label>Project Title</label>
+    <input type="text" id="title" required>
+
+    <label>Description</label>
+    <textarea id="description" rows="4" required></textarea>
+
+    <label>Tech Stack</label>
+    <input type="text" id="tech">
+
+    <label>Project Link</label>
+    <input type="url" id="link">
+
+    <label>Replace Files (Optional)</label>
+    <input type="file" id="files" multiple>
+
+    <div class="form-buttons">
+      <button type="submit">Save Changes</button>
+      <button type="button" onclick="window.location.href='project_details.html'" class="cancel-btn">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+  const editId = localStorage.getItem("editProjectId");
+  const projects = JSON.parse(localStorage.getItem("projects")||"[]");
+  const project = projects.find(p=>p.id==editId);
+  if(!project){ alert("Project not found"); window.location.href="index.html"; return; }
+
+  // Pre-fill
+  document.getElementById("title").value = project.title;
+  document.getElementById("description").value = project.description;
+  document.getElementById("tech").value = project.tech;
+  document.getElementById("link").value = project.link;
+
+  document.getElementById("editForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    project.title = document.getElementById("title").value.trim();
+    project.description = document.getElementById("description").value.trim();
+    project.tech = document.getElementById("tech").value.trim();
+    project.link = document.getElementById("link").value.trim();
+
+    const fileInput = document.getElementById("files");
+    if(fileInput.files.length>0){
+      const filesData=[];
+      for(const file of fileInput.files){
+        const base64 = await toBase64(file);
+        filesData.push({name:file.name, data:base64});
+      }
+      project.files = filesData; // overwrite old files
+    }
+
+    localStorage.setItem("projects", JSON.stringify(projects));
+    localStorage.removeItem("editProjectId");
+    localStorage.setItem("selectedProjectId", editId);
+    window.location.href="project_details.html";
+  });
+
+  function toBase64(file){
+    return new Promise((resolve,reject)=>{
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = ()=>resolve(reader.result);
+      reader.onerror=err=>reject(err);
+    });
+  }
+});
+</script>
+</body>
+</html>

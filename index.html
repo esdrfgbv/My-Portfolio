@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ram K | Portfolio</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="profile">
+      <img src="profile.jpg" alt="Profile Image" />
+      <h2>Ram K</h2>
+      <p class="tagline">Web Developer | CSE Student</p>
+    </div>
+    <nav>
+      <ul>
+        <li class="active" onclick="showSection('projects', this)">Projects</li>
+        <li onclick="showSection('education', this)">Education</li>
+        <li onclick="showSection('achievements', this)">Achievements</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <!-- Projects -->
+    <section id="projects" class="section active">
+      <h1>Projects</h1>
+      <div class="project-form">
+        <button type="button" id="addNewProjectBtn">➕ Add New Project</button>
+      </div>
+      <ul id="projectList"></ul>
+      <p id="noProjects" class="muted" style="display:none;">No projects yet. Click "Add New Project" to create one.</p>
+    </section>
+
+    <!-- Education -->
+    <section id="education" class="section">
+      <h1>Education</h1>
+      <div class="edu-card">
+        <h3>B.Tech in CSE</h3>
+        <p>GITAM University (2024–present)</p>
+        <p><b>CGPA:</b> 8.9</p>
+      </div>
+      <br>
+      <div class="edu-card">
+        <h3>12th</h3>
+        <p>Pandiit Jr College (2022-2024)</p>
+        <p><b>Percentage:</b>91</p>
+      </div>
+    </section>
+
+    <!-- Achievements -->
+    <section id="achievements" class="section">
+      <h1>Achievements</h1>
+      <ul class="achievements-list">
+        <li>🏆 Selected For SIH external round</li>
+        <li>🤖 Built Arduino Seed Thrower Project</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<script src="script.js"></script>
+<script>
+function showSection(id, element){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".sidebar ul li").forEach(li=>li.classList.remove("active"));
+  if(element) element.classList.add("active");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const addBtn = document.getElementById("addNewProjectBtn");
+  if(addBtn) addBtn.addEventListener("click", ()=> window.location.href="add_project.html");
+
+  const projectList = document.getElementById("projectList");
+
+  function renderProjects(){
+    const projects = JSON.parse(localStorage.getItem("projects") || "[]");
+    projectList.innerHTML="";
+    const noP = document.getElementById("noProjects");
+    if(!projects.length){ 
+      noP.style.display="block"; 
+      return; 
+    } else { 
+      noP.style.display="none"; 
+    }
+
+    projects.forEach(p=>{
+      const li = document.createElement("li");
+
+      // Only show project title
+      const info = document.createElement("div");
+      info.className = "project-info";
+      info.style.cursor = "pointer";
+      info.addEventListener("click", ()=>{
+        localStorage.setItem("selectedProjectId", p.id);
+        window.location.href="project_details.html";
+      });
+
+      const h3 = document.createElement("h3");
+      h3.textContent = p.title; // Only title visible
+      info.appendChild(h3);
+
+      li.appendChild(info);
+
+      // Delete button
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Delete";
+      delBtn.className = "delete-btn";
+      delBtn.addEventListener("click", (e)=>{
+        e.stopPropagation(); // prevent triggering click
+        if(confirm("Delete this project?")){
+          const projects = JSON.parse(localStorage.getItem("projects")||"[]");
+          const updated = projects.filter(pr => pr.id !== p.id);
+          localStorage.setItem("projects", JSON.stringify(updated));
+          renderProjects();
+        }
+      });
+
+      li.appendChild(delBtn);
+      projectList.appendChild(li);
+    });
+  }
+
+  renderProjects();
+});
+</script>
+</body>
+</html>
