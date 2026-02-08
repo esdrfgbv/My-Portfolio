@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, ArrowUp } from "lucide-react";
+import { Github, Linkedin, Twitter, ArrowUp, Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -31,7 +31,7 @@ const Footer = () => {
               {[
                 { icon: Github, label: "GitHub", href: "https://github.com/esdrfgbv" },
                 { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/kolipakula-janakiram-30a520341" },
-                { icon: Twitter, label: "Twitter", href: "#" },
+                { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/urstrulyram.k?utm_source=qr" },
               ].map(({ icon: Icon, label, href }) => (
                 <a
                   key={label}
