@@ -4,7 +4,7 @@ import { GraduationCap, Calendar } from "lucide-react";
 
 const education = [
     {
-        degree: "Bachelor of Science in Computer Science",
+        degree: "Bachelor of Technology in Computer Science",
         institution: "GITAM University Visakhapatnam",
         period: "2024 — Present",
         cgpa: "8.9",
