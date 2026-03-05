@@ -2,22 +2,25 @@ import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
+const getImg = (name: string) => `${import.meta.env.BASE_URL}images/${name}`;
+
 const projects = [
   {
-  title: "URL Shortener",
-  description: "A Spring Boot based URL shortening service that generates compact links, supports expiration-based invalidation, and performs fast redirects using a MySQL database.",
-  tech: ["Spring Boot", "Java", "MySQL", "REST API"],
-  color: "hsl(210, 80%, 50%)",
-  link: "https://urlshortener-9g99.onrender.com",
-  image: "/images/url-shortener.png",
-},
+    title: "URL Shortener",
+    description: "A Spring Boot based URL shortening service that generates compact links, supports expiration-based invalidation, and performs fast redirects using a MySQL database.",
+    tech: ["Spring Boot", "Java", "MySQL", "REST API"],
+    color: "hsl(210, 80%, 50%)",
+    link: "https://urlshortener-9g99.onrender.com",
+    image: getImg("url.png"),
+  },
+
   {
     title: "Sanchari",
     description: "Step-by-step interactive coding learning platform with multi-language courses, real code execution, MCQs, progress tracking, and an in-browser code visualizer for clear logic understanding.",
     tech: ["React", "JavaScript", "Code Execution", "Visualization"],
     color: "hsl(175, 80%, 50%)",
     link: "https://sanchariii.vercel.app/",
-    image: "/images/sancahri.png",
+    image: getImg("sancahri.png"),
   },
   {
     title: "Alqua (SIH 2025)",
@@ -25,7 +28,7 @@ const projects = [
     tech: ["React", "Data Visualization", "Research"],
     color: "hsl(200, 70%, 50%)",
     link: "https://alqua-sih-2025.vercel.app/",
-    image: "/images/Alqua(sih).png",
+    image: getImg("Alqua(sih).png"),
   },
   {
     title: "Campus Connect",
@@ -33,7 +36,7 @@ const projects = [
     tech: ["React", "TypeScript", "Node.js", "Event Management"],
     color: "hsl(280, 60%, 60%)",
     link: "https://campus-connect-hub-cyan.vercel.app/",
-    image: "/images/campus-connect.png",
+    image: getImg("campus-connect.png"),
   },
   {
     title: "Assignment Tracker",
@@ -41,7 +44,7 @@ const projects = [
     tech: ["React", "TypeScript", "Node.js", "Express"],
     color: "hsl(210, 80%, 55%)",
     link: "https://campus-connect-omega-two.vercel.app/",
-    image: "/images/assignment tracker.png",
+    image: getImg("assignment tracker.png"),
   },
   {
     title: "Dijkstra Graph Visualizer",
@@ -49,7 +52,7 @@ const projects = [
     tech: ["JavaScript", "Canvas API", "Algorithms", "Visualization"],
     color: "hsl(45, 90%, 55%)",
     link: "https://dijkstra-graph-visualizer.vercel.app/",
-    image: "/images/Dijkstra Graph Visualizer.png",
+    image: getImg("Dijkstra Graph Visualizer.png"),
   },
   {
     title: "AcademeX",
@@ -57,7 +60,7 @@ const projects = [
     tech: ["Python", "Tkinter", "GUI", "Academic Tools"],
     color: "hsl(340, 75%, 55%)",
     link: "https://github.com/esdrfgbv/AcadeMex.git",
-    image: "/images/sancahri.png", // Using sanchari as placeholder since no AcademeX image exists
+    image: getImg("sancahri.png"), // Using sanchari as placeholder since no AcademeX image exists
   },
 ];
 
