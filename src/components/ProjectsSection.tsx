@@ -4,6 +4,14 @@ import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-reac
 
 const projects = [
   {
+  title: "URL Shortener",
+  description: "A Spring Boot based URL shortening service that generates compact links, supports expiration-based invalidation, and performs fast redirects using a MySQL database.",
+  tech: ["Spring Boot", "Java", "MySQL", "REST API"],
+  color: "hsl(210, 80%, 50%)",
+  link: "https://urlshortener-9g99.onrender.com",
+  image: "/images/url-shortener.png",
+},
+  {
     title: "Sanchari",
     description: "Step-by-step interactive coding learning platform with multi-language courses, real code execution, MCQs, progress tracking, and an in-browser code visualizer for clear logic understanding.",
     tech: ["React", "JavaScript", "Code Execution", "Visualization"],
@@ -14,7 +22,7 @@ const projects = [
   {
     title: "Alqua (SIH 2025)",
     description: "AI-driven platform for marine living resources focused on conserving and managing marine biodiversity. Provides datasets, interactive visualizations, and research tools for marine species and ecosystems.",
-    tech: ["React", "AI/ML", "Data Visualization", "Research"],
+    tech: ["React", "Data Visualization", "Research"],
     color: "hsl(200, 70%, 50%)",
     link: "https://alqua-sih-2025.vercel.app/",
     image: "/images/Alqua(sih).png",
