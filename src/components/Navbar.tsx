@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const links = [
-  { label: "Work",       href: "#work"         },
-  { label: "About",      href: "#about"        },
-  { label: "Experience", href: "#experience"   },
-  { label: "Skills",     href: "#skills"       },
-  { label: "Education",  href: "#journey"      },
+  { label: "About", href: "#about" },
+  { label: "Work", href: "#work" },
+  { label: "Experience", href: "#experience" },
+  { label: "Skills", href: "#skills" },
+  { label: "Education", href: "#journey" },
   { label: "Milestones", href: "#achievements" },
-  { label: "Contact",    href: "#contact"      },
+  { label: "Contact", href: "#contact" },
 ];
 
 const Navbar = () => {
@@ -35,11 +35,10 @@ const Navbar = () => {
       >
         {/* Pill container */}
         <div
-          className={`w-full max-w-3xl flex items-center justify-between px-5 py-3 rounded-full transition-all duration-500 ${
-            scrolled
+          className={`w-full max-w-3xl flex items-center justify-between px-5 py-3 rounded-full transition-all duration-500 ${scrolled
               ? "bg-[rgba(13,13,13,0.85)] backdrop-blur-xl border border-[rgba(255,255,255,0.08)] shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
               : "bg-transparent border border-transparent"
-          }`}
+            }`}
         >
           {/* Logo */}
           <a
