@@ -1,98 +1,152 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { GraduationCap, Calendar } from "lucide-react";
+import { motion } from "framer-motion";
+import { useScrollReveal, fadeUp, fadeUpStagger } from "@/hooks/useScrollReveal";
+import SectionLabel from "./SectionLabel";
 
 const education = [
-    {
-        degree: "Bachelor of Technology in Computer Science",
-        institution: "GITAM University Visakhapatnam",
-        period: "2024 — Present",
-        cgpa: "8.9",
-        description: "Currently pursuing B.Tech in Computer Science with focus on software development, algorithms, and system design.",
-    },
-    {
-        degree: "Intermediate (12th)",
-        institution: "Pandiit Jr.Clg Visakhapatnam",
-        period: "2022 — 2024",
-        percentage: "91%",
-        description: "Completed intermediate education with strong foundation in mathematics and sciences.",
-    },
-    {
-        degree: "Secondary Education (10th)",
-        institution: "Sri Sathya Sai Vidhya Vihar Visakhapatnam",
-        period: "2022",
-        percentage: "84%",
-        description: "Completed secondary education with good academic performance.",
-    },
+  {
+    degree:      "B.Tech in Computer Science",
+    institution: "GITAM University",
+    location:    "Visakhapatnam",
+    period:      "2024 — Present",
+    score:       "8.9 CGPA",
+    scoreLabel:  "Current CGPA",
+    description: "Core focus on algorithms, systems design, and applied software engineering. Active in hackathons, AWS Club DevOps team, and product competitions.",
+    status:      "ongoing",
+  },
+  {
+    degree:      "Intermediate — 12th Grade",
+    institution: "Pandiit Jr. College",
+    location:    "Visakhapatnam",
+    period:      "2022 — 2024",
+    score:       "91%",
+    scoreLabel:  "Percentage",
+    description: "Strong foundation in mathematics and sciences, setting the base for computational thinking and engineering problem-solving.",
+    status:      "completed",
+  },
+  {
+    degree:      "Secondary Education — 10th",
+    institution: "Sri Sathya Sai Vidhya Vihar",
+    location:    "Visakhapatnam",
+    period:      "2022",
+    score:       "84%",
+    scoreLabel:  "Percentage",
+    description: "Completed secondary education with consistent academic performance and growing interest in technology and computation.",
+    status:      "completed",
+  },
 ];
 
 const EducationSection = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { ref, isInView } = useScrollReveal();
 
-    return (
-        <section id="education" className="section-padding" ref={ref}>
-            <div className="max-w-5xl mx-auto">
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5 }}
-                    className="text-3xl md:text-5xl font-bold mb-16 text-center"
-                >
-                    <span className="gradient-text">Education</span>
-                </motion.h2>
+  return (
+    <section
+      id="education"
+      className="section-padding"
+      ref={ref}
+      aria-label="Education section"
+    >
+      <div className="section-inner">
+        {/* Header */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 md:mb-20"
+        >
+          <div className="flex flex-col gap-4">
+            <SectionLabel number="02" label="Education" />
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-white tracking-tight">
+              Academic Foundation
+            </h2>
+          </div>
+          <p className="text-white/35 text-sm max-w-xs text-balance leading-relaxed md:text-right">
+            Building from first principles — mathematics, logic, and engineering.
+          </p>
+        </motion.div>
 
-                <div className="relative">
-                    {/* Timeline line */}
-                    <div className="absolute left-[22px] md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 via-accent/30 to-transparent" />
+        {/* Education cards — vertical with connecting line */}
+        <div className="relative max-w-3xl">
+          {/* Vertical timeline line */}
+          <div className="absolute left-6 top-6 bottom-6 w-px bg-gradient-to-b from-[#60A5FA]/40 via-[rgba(255,255,255,0.08)] to-transparent hidden md:block" />
 
-                    {education.map((edu, i) => {
-                        const isLeft = i % 2 === 0;
-                        return (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, x: isLeft ? -40 : 40 }}
-                                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                                transition={{ duration: 0.5, delay: 0.15 * i }}
-                                className={`relative flex items-start mb-12 last:mb-0 ${isLeft ? "md:flex-row" : "md:flex-row-reverse"
-                                    } flex-row`}
-                            >
-                                {/* Timeline dot */}
-                                <div className="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 z-10">
-                                    <div className="w-4 h-4 rounded-full bg-primary border-4 border-background shadow-[0_0_12px_hsl(var(--primary)/0.5)]" />
-                                </div>
-
-                                {/* Card */}
-                                <div
-                                    className={`ml-12 md:ml-0 ${isLeft ? "md:mr-auto md:pr-12 md:w-[45%]" : "md:ml-auto md:pl-12 md:w-[45%]"
-                                        }`}
-                                >
-                                    <div className="glass-card p-6 group hover:scale-[1.02] transition-transform duration-300">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <GraduationCap size={14} className="text-primary" />
-                                            <span className="text-primary font-mono text-xs tracking-wider">{edu.institution}</span>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-foreground mb-1">{edu.degree}</h3>
-                                        <div className="flex items-center gap-1.5 text-muted-foreground text-xs mb-3">
-                                            <Calendar size={12} />
-                                            <span>{edu.period}</span>
-                                        </div>
-                                        {edu.cgpa && (
-                                            <p className="text-primary font-semibold text-sm mb-2">CGPA: {edu.cgpa}</p>
-                                        )}
-                                        {edu.percentage && (
-                                            <p className="text-primary font-semibold text-sm mb-2">Percentage: {edu.percentage}</p>
-                                        )}
-                                        <p className="text-muted-foreground text-sm leading-relaxed">{edu.description}</p>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
+          <div className="flex flex-col gap-6">
+            {education.map((edu, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUpStagger(i * 0.1)}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                className="relative"
+              >
+                {/* Timeline dot (desktop) */}
+                <div className="hidden md:flex absolute left-0 top-7 -translate-x-1/2 z-10 w-3 h-3 rounded-full items-center justify-center">
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      edu.status === "ongoing"
+                        ? "bg-[#60A5FA] shadow-[0_0_10px_rgba(96,165,250,0.6)]"
+                        : "bg-[rgba(255,255,255,0.15)]"
+                    }`}
+                  />
                 </div>
-            </div>
-        </section>
-    );
+
+                {/* Card */}
+                <div className="md:ml-14 card-premium p-6 md:p-8 group hover:border-[rgba(255,255,255,0.1)] transition-all duration-300">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-5">
+                    <div className="flex flex-col gap-1">
+                      <span className="eyebrow">{edu.institution}</span>
+                      <h3 className="font-display font-semibold text-lg md:text-xl text-white tracking-tight">
+                        {edu.degree}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-white/30 text-xs font-mono">
+                          {edu.location}
+                        </span>
+                        <span className="text-white/15">·</span>
+                        <span className="text-white/30 text-xs font-mono">
+                          {edu.period}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Score badge */}
+                    <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
+                      <span className="text-[10px] font-mono text-white/25 uppercase tracking-wider">
+                        {edu.scoreLabel}
+                      </span>
+                      <span
+                        className={`font-display font-bold text-2xl tracking-tight ${
+                          edu.status === "ongoing"
+                            ? "text-[#60A5FA]"
+                            : "text-white/60"
+                        }`}
+                      >
+                        {edu.score}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="divider mb-5" />
+
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    {edu.description}
+                  </p>
+
+                  {edu.status === "ongoing" && (
+                    <div className="flex items-center gap-2 mt-4">
+                      <span className="status-dot" />
+                      <span className="text-[#60A5FA] text-xs font-mono tracking-wider">
+                        In Progress
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default EducationSection;

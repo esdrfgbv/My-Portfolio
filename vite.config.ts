@@ -10,6 +10,10 @@ export default defineConfig(() => ({
     hmr: {
       overlay: false,
     },
+    watch: {
+      // Ignore non-source files that may be locked by the OS or other apps
+      ignored: ["**/*.pdf", "**/*.docx", "**/*.xlsx", "**/*.pptx", "**/*.jpeg", "**/*.jpg", "**/*.png", "**/node_modules/**"],
+    },
   },
   plugins: [react()],
   resolve: {

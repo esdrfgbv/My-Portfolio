@@ -1,29 +1,31 @@
 import Navbar from "@/components/Navbar";
 import ScrollProgress from "@/components/ScrollProgress";
-import GridBackground from "@/components/GridBackground";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
-import EducationSection from "@/components/EducationSection";
-import AchievementsSection from "@/components/AchievementsSection";
 import ProjectsSection from "@/components/ProjectsSection";
+import ExperienceSection from "@/components/ExperienceSection";
+import SkillsSection from "@/components/SkillsSection";
+import JourneySection from "@/components/JourneySection";
+import AchievementsSection from "@/components/AchievementsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen" style={{ background: "var(--surface-0)" }}>
       <ScrollProgress />
-      <GridBackground />
-      <div className="relative z-10">
-        <Navbar />
+      <Navbar />
+      <main>
         <HeroSection />
         <AboutSection />
-        <EducationSection />
-        <AchievementsSection />
         <ProjectsSection />
+        <ExperienceSection />
+        <SkillsSection />
+        <JourneySection />
+        <AchievementsSection />
         <ContactSection />
-        <Footer />
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };

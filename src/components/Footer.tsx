@@ -1,65 +1,30 @@
-import { Github, Linkedin, Twitter, ArrowUp, Instagram } from "lucide-react";
-
 const Footer = () => {
-  return (
-    <footer className="border-t border-border pt-12 pb-8 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-          <div>
-            <a href="#home" className="text-2xl font-bold gradient-text">{"<Ram.k />"}</a>
-            <p className="text-muted-foreground text-sm mt-3 max-w-xs">
-              Engineering Undergraduate passionate about building real-world solutions with modern web technologies.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-foreground font-semibold mb-4 text-sm">Quick Links</h4>
-            <div className="flex flex-col gap-2">
-              {["About", "Education", "Achievements", "Work", "Contact"].map((link) => (
-                <a
-                  key={link}
-                  href={`#${link.toLowerCase()}`}
-                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                >
-                  {link}
-                </a>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h4 className="text-foreground font-semibold mb-4 text-sm">Connect</h4>
-            <div className="flex gap-3">
-              {[
-                { icon: Github, label: "GitHub", href: "https://github.com/esdrfgbv" },
-                { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/kolipakula-janakiram-30a520341" },
-                { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/urstrulyram.k?utm_source=qr" },
-              ].map(({ icon: Icon, label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
-                  aria-label={label}
-                >
-                  <Icon size={18} />
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
+  const year = new Date().getFullYear();
 
-        <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-muted-foreground text-xs">
-            © 2026 Ram.k • Learning &gt; Comfort • From ideas → logic → code → impact
-          </p>
+  return (
+    <footer
+      className="border-t border-[rgba(255,255,255,0.06)] px-6 md:px-12 lg:px-20 py-8"
+      aria-label="Site footer"
+    >
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Left */}
+        <div className="flex items-center gap-3">
           <a
             href="#home"
-            className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
-            aria-label="Back to top"
+            className="font-display font-bold text-sm text-white/40 hover:text-white/70 transition-colors duration-200"
           >
-            <ArrowUp size={16} />
+            Ram.k
           </a>
+          <span className="text-white/15">·</span>
+          <span className="font-mono text-[10px] text-white/20 tracking-wider">
+            © {year}
+          </span>
         </div>
+
+        {/* Right */}
+        <p className="font-mono text-[10px] text-white/20 tracking-wider text-center sm:text-right">
+          Designed & built by Kolipakula JanakiRam
+        </p>
       </div>
     </footer>
   );

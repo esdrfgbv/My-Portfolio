@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=ICA+Rubrik:wght@400;700&family=Poppins:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    background-color: #0d0d0d;
+    overflow: hidden;
+}
+
+.banner {
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Slider Frame & 3D Space Setup */
+.banner .slider {
+    position: absolute;
+    width: 200px;
+    height: 250px;
+    top: 10%;
+    left: calc(50% - 100px);
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    animation: autoRun 20s linear infinite;
+    z-index: 2; /* Set higher than content so it rotates in front of/behind background text */
+}
+
+@keyframes autoRun {
+    from {
+        transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
+    }
+    to {
+        transform: perspective(1000px) rotateX(-16deg) rotateY(360deg);
+    }
+}
+
+/* 3D Item Math Alignment */
+.banner .slider .item {
+    position: absolute;
+    inset: 0 0 0 0;
+    transform: 
+        rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) 
+        translateZ(550px);
+}
+
+.banner .slider .item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Text and Foreground Content Layout */
+.banner .content {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1400px, 100%);
+    height: max-content;
+    padding-bottom: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+}
+
+.banner .content h1 {
+    font-family: 'ICA Rubrik', sans-serif;
+    font-size: 16em;
+    line-height: 1em;
+    color: #252525;
+    margin: 0;
+    position: relative;
+}
+
+/* Overlapping Text Effect (Text Stroke / Hollow Mask) */
+.banner .content h1::after {
+    position: absolute;
+    inset: 0 0 0 0;
+    content: attr(data-content);
+    color: transparent;
+    -webkit-text-stroke: 2px #fff;
+    z-index: 2; /* Brings the text outline on top of the model element */
+}
+
+.banner .content .design {
+    font-family: 'Poppins', sans-serif;
+    text-align: right;
+    max-width: 200px;
+}
+
+.banner .content .design p:nth-child(1) {
+    font-size: 3em;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+}
+
+/* Character/Model Image Positioning */
+.banner .content .model {
+    background-image: url('images/model.png');
+    width: 100%;
+    height: 75vh;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-size: auto 130%;
+    background-repeat: no-repeat;
+    background-position: top center;
+    z-index: 1; /* Sits between the solid back text and the outline pseudo-element text */
+    pointer-events: none;
+}

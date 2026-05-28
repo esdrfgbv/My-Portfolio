@@ -1,148 +1,209 @@
-import { Suspense, useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Sphere, MeshDistortMaterial } from "@react-three/drei";
-import * as THREE from "three";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useScrollReveal, fadeUp } from "@/hooks/useScrollReveal";
+import SectionLabel from "./SectionLabel";
 
-const techStack = [
-  "Python", "C", "JavaScript", "React",
-  "Node.js", "TypeScript", "Tailwind CSS", "Express",
-  "SQL", "HTML", "CSS", "Tinkercad",
-];
+const tabs = ["Mindset", "Approach", "Focus"] as const;
+type Tab = typeof tabs[number];
 
-const GlobeScene = () => {
-  const meshRef = useRef<THREE.Mesh>(null!);
-  const wireRef = useRef<THREE.Mesh>(null!);
-
-  useFrame((state) => {
-    meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
-    wireRef.current.rotation.y = state.clock.elapsedTime * 0.2;
-    wireRef.current.rotation.x = state.clock.elapsedTime * 0.1;
-  });
-
-  return (
-    <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[5, 5, 5]} intensity={0.8} color="#00d4aa" />
-      <mesh ref={meshRef}>
-        <sphereGeometry args={[1.3, 32, 32]} />
-        <MeshDistortMaterial color="#0a1628" distort={0.15} speed={2} roughness={0.8} />
-      </mesh>
-      <mesh ref={wireRef}>
-        <sphereGeometry args={[1.35, 20, 20]} />
-        <meshBasicMaterial color="#00d4aa" wireframe transparent opacity={0.15} />
-      </mesh>
-      {/* Dots on globe */}
-      {Array.from({ length: 30 }).map((_, i) => {
-        const phi = Math.acos(-1 + (2 * i) / 30);
-        const theta = Math.sqrt(30 * Math.PI) * phi;
-        const x = 1.32 * Math.cos(theta) * Math.sin(phi);
-        const y = 1.32 * Math.sin(theta) * Math.sin(phi);
-        const z = 1.32 * Math.cos(phi);
-        return (
-          <mesh key={i} position={[x, y, z]}>
-            <sphereGeometry args={[0.02, 6, 6]} />
-            <meshStandardMaterial color="#00ffcc" emissive="#00ffcc" emissiveIntensity={1} />
-          </mesh>
-        );
-      })}
-    </>
-  );
+const tabContent: Record<Tab, { heading: string; paragraphs: string[] }> = {
+  Mindset: {
+    heading: "Systems first. Products always.",
+    paragraphs: [
+      "I think in systems — how components connect, where they break at scale, and what creates compounding leverage. Most engineers optimize for features. I optimize for architecture.",
+      "Every project I build has a clear theory of leverage: what problem does solving this unlock? What does shipping this teach? Engineering is a form of structured thinking, and I treat it that way.",
+    ],
+  },
+  Approach: {
+    heading: "Ship fast. Learn real. Iterate sharp.",
+    paragraphs: [
+      "I approach problems the same way early startups do — with aggressive scope control and an obsession with getting to working software fast. The sooner something is real, the sooner you know what actually matters.",
+      "I don't build features for resumes. I build products for users. The gap between a demo and a system people actually use is where most engineers get stuck — I've learned to close it.",
+    ],
+  },
+  Focus: {
+    heading: "AI-powered systems and intelligent interfaces.",
+    paragraphs: [
+      "Right now I'm deep in AI-powered applications: RAG pipelines, semantic retrieval, LLM integration, and building the interface layer between complex models and real users.",
+      "I'm particularly drawn to problems where AI creates genuine capability amplification — tools that make builders more capable, systems that make decisions better, interfaces that make complexity invisible.",
+    ],
+  },
 };
 
+const techStack = [
+  "Python", "TypeScript", "React", "Node.js", "Spring Boot", "Java", "SQL", "REST APIs", "JavaScript", "Git",
+];
+
 const AboutSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [activeTab, setActiveTab] = useState<Tab>("Mindset");
+  const { ref, isInView } = useScrollReveal();
 
   return (
-    <section id="about" className="section-padding" ref={ref}>
-      <div className="max-w-7xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-3xl md:text-5xl font-bold mb-16 text-center"
+    <section id="about" className="section-padding" ref={ref} aria-label="About section">
+      <div className="section-inner">
+        {/* Header */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="mb-16 md:mb-20"
         >
-          About <span className="gradient-text">Me</span>
-        </motion.h2>
+          <SectionLabel number="01" label="About" />
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Introduction Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20">
+          {/* LEFT — Identity card */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="glass-card p-8 lg:col-span-2 transition-all duration-300"
+            variants={fadeUp}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            className="flex flex-col gap-6 lg:sticky lg:top-28 lg:self-start"
           >
-            <p className="text-primary font-mono text-xs mb-3 tracking-wider">// INTRODUCTION</p>
-            <h3 className="text-2xl font-bold mb-4 text-foreground">Passionate about solving real-world problems</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Motivated B.Tech CSE undergraduate with strong problem-solving skills and hands-on experience in building
-              real-world projects using Python, C, JavaScript, and web technologies. Passionate about system design, logic,
-              and scalable solutions, with proven ability to learn fast, adapt, and execute ideas from concept to
-              implementation.
-            </p>
-          </motion.div>
-
-          {/* Globe Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="glass-card p-6 flex flex-col items-center justify-center transition-all duration-300 min-h-[280px]"
-          >
-            <p className="text-primary font-mono text-xs mb-2 tracking-wider self-start">// LOCATION</p>
-            <div className="w-full h-48">
-              <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">Loading...</div>}>
-                <Canvas camera={{ position: [0, 0, 3.5], fov: 40 }}>
-                  <GlobeScene />
-                </Canvas>
-              </Suspense>
+            {/* Large ghost number */}
+            <div
+              className="font-display font-extrabold text-white/[0.035] select-none leading-none"
+              style={{ fontSize: "clamp(7rem, 18vw, 11rem)" }}
+              aria-hidden="true"
+            >
+              01
             </div>
-            <p className="text-muted-foreground text-sm mt-2">Visakhapatnam, India</p>
-          </motion.div>
 
-          {/* Tech Stack Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="glass-card p-8 transition-all duration-300"
-          >
-            <p className="text-primary font-mono text-xs mb-4 tracking-wider">// TECH STACK</p>
-            <div className="flex flex-wrap gap-2">
-              {techStack.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1.5 rounded-md bg-secondary text-secondary-foreground text-sm font-medium border border-border hover:border-primary/30 transition-colors"
-                >
-                  {tech}
+            {/* Glass identity card */}
+            <div
+              className="rounded-2xl p-6 flex flex-col gap-5"
+              style={{
+                background: "var(--glass-bg-2)",
+                border: "1px solid var(--glass-border-2)",
+                backdropFilter: "var(--glass-blur-md)",
+              }}
+            >
+              {/* Name block */}
+              <div>
+                <h2 className="font-display font-bold text-white text-2xl tracking-tight">Ram.k</h2>
+                <p className="font-mono text-[10px] tracking-[0.12em] text-white/30 uppercase mt-1">
+                  Kolipakula JanakiRam
+                </p>
+              </div>
+
+              <div className="divider" />
+
+              {/* Stats grid */}
+              <div className="flex flex-col gap-3">
+                {[
+                  ["University", "GITAM, Visakhapatnam"],
+                  ["Degree",     "B.Tech CSE — 2nd Year"],
+                  ["CGPA",       "8.9 / 10.0"],
+                  ["Focus",      "AI · Systems · Products"],
+                  ["Location",   "Visakhapatnam, India"],
+                ].map(([label, value]) => (
+                  <div key={label} className="flex justify-between items-start gap-4">
+                    <span className="font-mono text-[9px] tracking-[0.12em] text-white/25 uppercase whitespace-nowrap pt-0.5">
+                      {label}
+                    </span>
+                    <span className="text-white/70 text-sm text-right leading-snug">{value}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="divider" />
+
+              {/* Status */}
+              <div className="flex items-center gap-2">
+                <span className="status-dot" />
+                <span className="font-mono text-[9px] tracking-[0.12em] text-[#60A5FA] uppercase">
+                  Open to internships & collabs
                 </span>
+              </div>
+            </div>
+
+            {/* Tech pills */}
+            <div className="flex flex-wrap gap-1.5">
+              {techStack.map((t) => (
+                <span key={t} className="tech-pill">{t}</span>
               ))}
             </div>
           </motion.div>
 
-          {/* Contact CTA Card */}
+          {/* RIGHT — Tabbed narrative */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="glass-card p-8 flex flex-col justify-between transition-all duration-300 lg:col-span-2"
+            variants={fadeUp}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            transition={{ delay: 0.1 }}
+            className="flex flex-col gap-8"
           >
-            <div>
-              <p className="text-primary font-mono text-xs mb-3 tracking-wider">// AVAILABILITY</p>
-              <h3 className="text-2xl font-bold mb-3 text-foreground">Let's build something together</h3>
-              <p className="text-muted-foreground">
-                Currently pursuing B.Tech CSE and open to internships, freelance projects, and collaborative opportunities.
-                Always excited to work on innovative ideas and challenging problems.
-              </p>
-            </div>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors mt-6 w-fit"
+            {/* Tab switcher */}
+            <div
+              className="flex gap-1 p-1 rounded-xl w-fit"
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.07)",
+              }}
+              role="tablist"
             >
-              Contact Me →
-            </a>
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  role="tab"
+                  aria-selected={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                  className="relative px-5 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                  style={{
+                    color: activeTab === tab ? "#f8f8f8" : "rgba(255,255,255,0.35)",
+                  }}
+                >
+                  {activeTab === tab && (
+                    <motion.div
+                      layoutId="tab-indicator"
+                      className="absolute inset-0 rounded-lg"
+                      style={{
+                        background: "rgba(96,165,250,0.12)",
+                        border: "1px solid rgba(96,165,250,0.25)",
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{tab}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Tab content */}
+            <div className="relative min-h-[280px]" role="tabpanel">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col gap-6"
+                >
+                  <h3
+                    className="font-display font-bold text-white tracking-tight"
+                    style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)" }}
+                  >
+                    {tabContent[activeTab].heading}
+                  </h3>
+                  {tabContent[activeTab].paragraphs.map((p, i) => (
+                    <p key={i} className="text-white/50 text-base md:text-[1.05rem] leading-[1.85] font-light text-balance">
+                      {p}
+                    </p>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Divider */}
+            <div className="divider" />
+
+            {/* Positioning statement */}
+            <blockquote
+              className="font-display italic text-white/25 leading-relaxed"
+              style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)" }}
+            >
+              "The best engineers don't just write code — they build systems that outlast their time at the keyboard."
+            </blockquote>
           </motion.div>
         </div>
       </div>
