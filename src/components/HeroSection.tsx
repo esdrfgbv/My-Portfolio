@@ -191,7 +191,7 @@ const HeroSection = () => {
                 }}
               >
                 <img
-                  src={`images/profile.jpeg`}
+                  src="/images/profile.jpeg"
                   alt="Kolipakula JanakiRam"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 hover:scale-105 opacity-95 grayscale-[20%]"
                 />
