@@ -44,7 +44,7 @@ const PROJECTS: Project[] = [
     tech: ["React", "RAG", "LLM APIs", "Full Stack"],
     challenge: "Designing a modular full-stack architecture that supports scalable educational content delivery alongside real-time AI capabilities.",
     impact: "Automated student progress tracking and intelligent learning workflows",
-    link: "https://github.com/esdrfgbv/ai_tutor.git",
+    link: "https://ai-tutor-neon-kappa.vercel.app/",
     image: getImg("ai-tutor.png"),
     accentColor: "rgba(52,211,153,0.15)",
   },
