@@ -7,9 +7,9 @@ import { Github, Linkedin, Mail, ArrowUpRight, Instagram } from "lucide-react";
 const socialLinks = [
   {
     label: "GitHub",
-    href: "https://github.com/esdrfgbv",
+    href: "https://github.com/ramkolipakula",
     icon: Github,
-    handle: "@esdrfgbv",
+    handle: "@ramkolipakula",
   },
   {
     label: "LinkedIn",
