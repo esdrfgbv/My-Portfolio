@@ -366,17 +366,30 @@
 /* 3D Demo Slider CSS (JS Controlled now) */
 .demo-slider {
   transform-style: preserve-3d;
-  transform: perspective(2500px) rotateX(-16deg);
-  /* JS will control rotateY */
+  width: 85vw;
+  height: 60vh;
+  max-width: 340px;
+  max-height: 480px;
+  /* On mobile, parent doesn't rotate, JS controls per-item transforms */
+  transform: perspective(1200px) rotateX(0deg) rotateY(0deg);
 }
 
 .demo-slider .item {
   position: absolute;
   inset: 0 0 0 0;
-  transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(350px);
+  /* Transforms are applied dynamically via JS on mobile */
 }
 
 @media (min-width: 768px) {
+  .demo-slider {
+    width: 250px;
+    height: 360px;
+    max-width: none;
+    max-height: none;
+    /* Desktop parent rotation */
+    transform: perspective(2500px) rotateX(-16deg);
+  }
+
   .demo-slider .item {
     transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(550px);
   }

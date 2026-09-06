@@ -290,6 +290,7 @@ const ProjectStack3D = () => {
   const lastXRef = useRef(0);
   const velocityRef = useRef(0);
   const isHorizontalRef = useRef<boolean | null>(null);
+  const hasDraggedRef = useRef(false);
   const animationFrameRef = useRef<number>();
 
   // Custom CSS variables style object
@@ -305,6 +306,8 @@ const ProjectStack3D = () => {
   }, []);
 
   const openProject = (project: Project) => {
+    isDraggingRef.current = false;
+    isHorizontalRef.current = null;
     window.history.pushState({ modal: "project" }, "", "");
     setExpandedProject(project);
   };
@@ -316,6 +319,16 @@ const ProjectStack3D = () => {
       setExpandedProject(null);
     }
   };
+
+  // Reset pointer state when expandedProject changes
+  useEffect(() => {
+    if (expandedProject) {
+      isDraggingRef.current = false;
+      isHorizontalRef.current = null;
+      hasDraggedRef.current = false;
+      velocityRef.current = 0;
+    }
+  }, [expandedProject]);
 
   // JS-driven continuous rotation and drag handling
   useEffect(() => {
@@ -338,9 +351,56 @@ const ProjectStack3D = () => {
           }
         }
 
-        // Apply transform to the slider ref directly
+        const isMobile = window.innerWidth < 768;
+
         if (sliderRef.current) {
-          sliderRef.current.style.transform = `perspective(2500px) rotateX(-16deg) rotateY(${rotationRef.current}deg)`;
+          if (isMobile) {
+            // Mobile Coverflow
+            sliderRef.current.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg)`;
+            
+            const progress = -rotationRef.current / (360 / PROJECTS.length);
+            const items = sliderRef.current.children;
+            
+            for (let i = 0; i < items.length; i++) {
+              const item = items[i] as HTMLElement;
+              let dist = (i - progress) % PROJECTS.length;
+              if (dist > PROJECTS.length / 2) dist -= PROJECTS.length;
+              if (dist < -PROJECTS.length / 2) dist += PROJECTS.length;
+              
+              const absDist = Math.abs(dist);
+              const isActive = absDist < 0.5;
+              
+              const zIndex = Math.max(0, 100 - Math.round(absDist * 10));
+              item.style.zIndex = zIndex.toString();
+              
+              if (absDist > 2.5) {
+                item.style.opacity = '0';
+                item.style.pointerEvents = 'none';
+              } else {
+                item.style.opacity = (1 - Math.max(0, absDist - 1.5) * 0.5).toString();
+                item.style.pointerEvents = isActive ? 'auto' : 'none';
+              }
+              
+              const translateX = dist * 85; 
+              const scale = Math.max(1 - 0.15 * absDist, 0.5);
+              const rotateY = dist * -25;
+              const translateZ = -absDist * 50;
+              
+              item.style.transform = `translateX(${translateX}%) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+            }
+          } else {
+            // Desktop Cylinder
+            sliderRef.current.style.transform = `perspective(2500px) rotateX(-16deg) rotateY(${rotationRef.current}deg)`;
+            
+            const items = sliderRef.current.children;
+            for (let i = 0; i < items.length; i++) {
+              const item = items[i] as HTMLElement;
+              item.style.transform = '';
+              item.style.zIndex = '';
+              item.style.opacity = '';
+              item.style.pointerEvents = '';
+            }
+          }
         }
       } else {
         // Reset lastTime to avoid huge delta jumps when modal closes
@@ -362,24 +422,17 @@ const ProjectStack3D = () => {
   const handlePointerDown = (e: React.PointerEvent) => {
     if (expandedProject) return;
 
-    isDraggingRef.current = true;
     startXRef.current = e.clientX;
     startYRef.current = e.clientY;
     lastXRef.current = e.clientX;
     velocityRef.current = 0;
     isHorizontalRef.current = null;
-
-    if (e.target instanceof Element) {
-      try {
-        e.target.setPointerCapture(e.pointerId);
-      } catch (err) {
-        // Ignore setPointerCapture errors on unmounted/invalid elements
-      }
-    }
+    isDraggingRef.current = false;
+    hasDraggedRef.current = false;
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDraggingRef.current || expandedProject) return;
+    if (expandedProject) return;
 
     const deltaX = e.clientX - startXRef.current;
     const deltaY = e.clientY - startYRef.current;
@@ -388,10 +441,24 @@ const ProjectStack3D = () => {
     if (isHorizontalRef.current === null) {
       if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
         isHorizontalRef.current = Math.abs(deltaX) > Math.abs(deltaY);
+        
+        if (isHorizontalRef.current) {
+          isDraggingRef.current = true;
+          // Capture pointer on the interaction surface only when it's a horizontal drag
+          if (e.currentTarget instanceof Element) {
+            try {
+              e.currentTarget.setPointerCapture(e.pointerId);
+            } catch (err) {}
+          }
+        }
       }
     }
 
-    if (isHorizontalRef.current) {
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+      hasDraggedRef.current = true;
+    }
+
+    if (isHorizontalRef.current && isDraggingRef.current) {
       // Horizontal swipe
       const moveDelta = e.clientX - lastXRef.current;
 
@@ -401,11 +468,6 @@ const ProjectStack3D = () => {
       velocityRef.current = degDelta; // Base velocity for inertia
       rotationRef.current += degDelta;
 
-      // Update immediately to avoid 1 frame lag
-      if (sliderRef.current) {
-        sliderRef.current.style.transform = `perspective(2500px) rotateX(-16deg) rotateY(${rotationRef.current}deg)`;
-      }
-
       lastXRef.current = e.clientX;
     }
   };
@@ -414,9 +476,9 @@ const ProjectStack3D = () => {
     isDraggingRef.current = false;
     isHorizontalRef.current = null;
 
-    if (e.target instanceof Element) {
+    if (e.currentTarget instanceof Element) {
       try {
-        e.target.releasePointerCapture(e.pointerId);
+        e.currentTarget.releasePointerCapture(e.pointerId);
       } catch (err) { }
     }
   };
@@ -429,14 +491,11 @@ const ProjectStack3D = () => {
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
-      onPointerLeave={handlePointerUp}
     >
       <div
         ref={sliderRef}
         className="demo-slider absolute"
         style={{
-          width: "250px",
-          height: "360px",
           top: "12%",
           ...sliderStyle
         }}
@@ -449,7 +508,11 @@ const ProjectStack3D = () => {
               key={project.id}
               className="item group"
               style={itemStyle}
-              onClick={() => openProject(project)}
+              onClick={() => {
+                if (!hasDraggedRef.current) {
+                  openProject(project);
+                }
+              }}
             >
               <div
                 className="absolute inset-0 rounded-xl"

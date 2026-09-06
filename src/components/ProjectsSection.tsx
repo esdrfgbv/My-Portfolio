@@ -58,7 +58,7 @@ const ProjectsSection = () => {
           transition={{ delay: 0.3 }}
           className="mt-8 text-center font-mono text-[9px] tracking-[0.12em] text-white/18 uppercase md:hidden"
         >
-          Use navigation arrows to browse projects
+          SWIPE TO BROWSE PROJECTS
         </motion.p>
       </div>
     </section>
