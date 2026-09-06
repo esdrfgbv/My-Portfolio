@@ -3,36 +3,45 @@ import { useScrollReveal, fadeUp, fadeUpStagger } from "@/hooks/useScrollReveal"
 import SectionLabel from "./SectionLabel";
 
 interface Experience {
-  period:       string;
-  category:     string;
-  title:        string;
+  period: string;
+  category: string;
+  title: string;
   organization: string;
-  description:  string;
-  highlight?:   string;
+  description: string;
+  highlight?: string;
 }
 
 const experiences: Experience[] = [
   {
-    period:       "May 2026 — Present",
-    category:     "Work Experience",
-    title:        "Full Stack Developer + Automations Engineer",
+    period: "May 2026 — Present",
+    category: "Work Experience",
+    title: "Full Stack Developer + Automations Engineer",
     organization: "Koutuhal.ai",
-    description:  "Working on the AI Tutor internship platform, building scalable full-stack features involving authentication, APIs, and dashboards. Developing automations to streamline internal operations and data handling.",
-    highlight:    "Active",
+    description: "Working on the AI Tutor internship platform, building scalable full-stack features involving authentication, APIs, and dashboards. Developing automations to streamline internal operations and data handling.",
+    highlight: "Active",
   },
   {
-    period:       "October 2025 — Present",
-    category:     "Leadership",
-    title:        "AWS Club DevOps Member",
+
+    period: "September 2026 — Present",
+    category: "Leadership",
+    title: "GitHub Community Web Engineering Domain Member",
     organization: "GITAM University",
-    description:  "Selected for the AWS Club DevOps team. Working on cloud infrastructure, CI/CD practices, and collaborative engineering projects alongside peers in a structured, industry-aligned environment.",
-    highlight:    "Active",
+    description: "Working on building and Mentoring Students for the GitHub Community.",
+    highlight: "Active",
+  },
+  {
+    period: "October 2025 — July 2026",
+    category: "Leadership",
+    title: "AWS Club DevOps Member",
+    organization: "GITAM University",
+    description: "Selected for the AWS Club DevOps team. Working on cloud infrastructure, CI/CD practices, and collaborative engineering projects alongside peers in a structured, industry-aligned environment.",
+    highlight: "Completed",
   }
 ];
 
 const categoryColors: Record<string, string> = {
-  "Work Experience":    "text-[#34D399] bg-[rgba(52,211,153,0.1)] border-[rgba(52,211,153,0.2)]",
-  "Leadership":         "text-[#60A5FA] bg-[rgba(96,165,250,0.1)] border-[rgba(96,165,250,0.2)]",
+  "Work Experience": "text-[#34D399] bg-[rgba(52,211,153,0.1)] border-[rgba(52,211,153,0.2)]",
+  "Leadership": "text-[#60A5FA] bg-[rgba(96,165,250,0.1)] border-[rgba(96,165,250,0.2)]",
 };
 
 const ExperienceSection = () => {

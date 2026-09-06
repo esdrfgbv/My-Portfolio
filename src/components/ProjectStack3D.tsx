@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Github, X } from "lucide-react";
+import { ExternalLink, Github, X, Info } from "lucide-react";
 
 const getImg = (name: string) => `${import.meta.env.BASE_URL}images/${name}`;
 
@@ -13,8 +13,9 @@ export interface Project {
   tech: string[];
   challenge: string;
   impact: string;
-  link: string;
+  link?: string;
   github?: string;
+  details?: string;
   image: string;
   accentColor: string;
 }
@@ -22,10 +23,51 @@ export interface Project {
 const PROJECTS: Project[] = [
   {
     id: 1,
+    title: "GOASIGNAL",
+    tagline: "Voice-Enabled Sub-200ms Hybrid RAG Engine",
+    description: "Production-grade voice-enabled hybrid RAG engine built for Hacker House Goa 2026 Task 2. Combines FAISS dense retrieval, BM25 sparse retrieval, Reciprocal Rank Fusion, ONNX INT8 embeddings, and grounding guardrails.",
+    category: "AI · Search",
+    tech: ["FastAPI", "Next.js", "FAISS", "Web Speech API"],
+    challenge: "Delivering fast, evidence-backed extractive responses with a measured sub-200ms retrieval pipeline.",
+    impact: "Built for Hacker House Goa 2026 Task 2",
+    link: "https://hh-goa-task-2-alpha.vercel.app/",
+    github: "https://github.com/CH-JASWANTH-KUMAR/HH_GOA-TASK-2",
+    image: getImg("hhgoa.png"),
+    accentColor: "rgba(96,165,250,0.15)",
+  },
+  {
+    id: 2,
+    title: "RiskWise",
+    tagline: "Merchant Chargeback Risk Manager",
+    description: "Predicts chargeback-prone transactions and explains the behavioral evidence behind predictions. Combines a Scikit-Learn ML model with a deterministic Policy Engine and an LLM-powered Evidence Responder.",
+    category: "AI · Fintech",
+    tech: ["FastAPI", "Python", "Scikit-Learn", "React"],
+    challenge: "Integrating a predictive Machine Learning model with strict deterministic policy overrides that cannot be bypassed by the AI.",
+    impact: "Built for Razorpay AI Risk Manager Track",
+    link: "https://riskwise-six.vercel.app/",
+    github: "https://github.com/ramkolipakula/riskwise",
+    image: getImg("riskwise.png"),
+    accentColor: "rgba(52,211,153,0.15)",
+  },
+  {
+    id: 3,
+    title: "R&D Proposal Platform",
+    tagline: "AI-powered Evaluation Engine",
+    description: "Foundation layer for evaluating R&D proposals. Provides a robust asynchronous API for uploading documents (PDF/DOCX) and triggering processing pipelines using PyMuPDF and PostgreSQL.",
+    category: "Backend · API",
+    tech: ["FastAPI", "PostgreSQL", "PyMuPDF", "Docker"],
+    challenge: "Building a scalable, asynchronous document extraction pipeline designed for future LangChain/LangGraph AI integration.",
+    impact: "Smart India Hackathon 2026 — PS 25180",
+    link: "https://sih25180.vercel.app/",
+    github: "https://github.com/ramkolipakula/sih_2k26",
+    image: getImg("sih-2k26.png"),
+    accentColor: "rgba(167,139,250,0.15)",
+  },
+  {
+    id: 4,
     title: "AgentAstra",
     tagline: "Multi-Agent AI Startup War Room",
-    description:
-      "Real-time startup intelligence platform using FastAPI and Next.js. Features an asynchronous multi-agent pipeline (asyncio + ThreadPoolExecutor) for market sizing, competitor scouting, and risk analysis with dynamic multi-model routing (OpenAI, Anthropic, Groq).",
+    description: "Real-time startup intelligence platform using FastAPI and Next.js. Features an asynchronous multi-agent pipeline (asyncio + ThreadPoolExecutor) for market sizing, competitor scouting, and risk analysis with dynamic multi-model routing (OpenAI, Anthropic, Groq).",
     category: "AI · Architecture",
     tech: ["FastAPI", "Next.js", "Python", "LLMs"],
     challenge: "Parallelizing specialist LLM agents and streaming live progress via Server-Sent Events (SSE) for a seamless real-time dashboard.",
@@ -35,11 +77,10 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(167,139,250,0.15)",
   },
   {
-    id: 2,
+    id: 5,
     title: "AI Tutor",
     tagline: "Interactive AI Learning Platform",
-    description:
-      "Browser-based AI-powered learning platform with real-time coding and doubt-solving capabilities. Implemented a Retrieval-Augmented Generation (RAG) pipeline for context-aware doubt solving using document retrieval and AI-generated responses.",
+    description: "Browser-based AI-powered learning platform with real-time coding and doubt-solving capabilities. Implemented a Retrieval-Augmented Generation (RAG) pipeline for context-aware doubt solving using document retrieval and AI-generated responses.",
     category: "AI · EdTech",
     tech: ["React", "RAG", "LLM APIs", "Full Stack"],
     challenge: "Designing a modular full-stack architecture that supports scalable educational content delivery alongside real-time AI capabilities.",
@@ -49,11 +90,10 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(52,211,153,0.15)",
   },
   {
-    id: 3,
+    id: 6,
     title: "Sanchari",
     tagline: "Cognitive training platform for programmers",
-    description:
-      "Step-by-step coding learning platform with real in-browser code execution, structured MCQ flows, and a visual code tracer. Pitched at Campus Shark Tank 2.0 — won 3rd place against competing startup ideas.",
+    description: "Step-by-step coding learning platform with real in-browser code execution, structured MCQ flows, and a visual code tracer. Pitched at Campus Shark Tank 2.0 — won 3rd place against competing startup ideas.",
     category: "EdTech · Product",
     tech: ["React", "JavaScript", "Code Execution", "Visualization"],
     challenge: "Building a zero-latency in-browser code execution engine without server-side sandboxing or paid APIs.",
@@ -63,11 +103,10 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(96,165,250,0.15)",
   },
   {
-    id: 4,
+    id: 7,
     title: "Alqua",
     tagline: "AI-driven marine biodiversity platform — SIH 2025",
-    description:
-      "Comprehensive platform for marine living resource conservation with AI-integrated species datasets, interactive data visualizations, and research-grade tools for marine biodiversity analysis. Advanced to SIH national round.",
+    description: "Comprehensive platform for marine living resource conservation with AI-integrated species datasets, interactive data visualizations, and research-grade tools for marine biodiversity analysis. Advanced to SIH national round.",
     category: "AI · Research",
     tech: ["React", "Data Visualization", "AI Integration", "Research APIs"],
     challenge: "Aggregating heterogeneous marine research datasets into a unified, semantically navigable interface.",
@@ -77,11 +116,10 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(52,211,153,0.12)",
   },
   {
-    id: 5,
+    id: 8,
     title: "Campus Connect",
     tagline: "Smart event management platform for universities",
-    description:
-      "Full-stack platform streamlining how college events are created, approved, discovered, and attended. Connects students, organizers, club leads, and administrators through unified role-based workflows.",
+    description: "Full-stack platform streamlining how college events are created, approved, discovered, and attended. Connects students, organizers, club leads, and administrators through unified role-based workflows.",
     category: "Platform · Full Stack",
     tech: ["React", "TypeScript", "Node.js", "Event Systems"],
     challenge: "Designing intuitive role-based access that feels seamless across five distinct user archetypes.",
@@ -91,11 +129,10 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(167,139,250,0.12)",
   },
   {
-    id: 6,
+    id: 9,
     title: "URL Shortener",
     tagline: "Production-grade link management service",
-    description:
-      "Spring Boot based URL shortening service with custom short code generation, expiration-based invalidation, analytics tracking, and fast MySQL-backed redirects. Built with production reliability patterns.",
+    description: "Spring Boot based URL shortening service with custom short code generation, expiration-based invalidation, analytics tracking, and fast MySQL-backed redirects. Built with production reliability patterns.",
     category: "Backend · Java",
     tech: ["Spring Boot", "Java", "MySQL", "REST API"],
     challenge: "Achieving consistent sub-50ms redirect latency with unique short code generation under concurrent write load.",
@@ -105,11 +142,10 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(251,191,36,0.1)",
   },
   {
-    id: 7,
+    id: 10,
     title: "Assignment Tracker",
     tagline: "Role-based academic management system",
-    description:
-      "Full-stack assignment management with role-based dashboards for teachers and students. Features file uploads, real-time status tracking across submission lifecycle, and grading functionality.",
+    description: "Full-stack assignment management with role-based dashboards for teachers and students. Features file uploads, real-time status tracking across submission lifecycle, and grading functionality.",
     category: "Full Stack · EdTech",
     tech: ["React", "TypeScript", "Node.js", "Express"],
     challenge: "Keeping complex permission logic invisible to end users while maintaining strict data integrity across roles.",
@@ -119,11 +155,10 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(96,165,250,0.1)",
   },
   {
-    id: 8,
+    id: 11,
     title: "Dijkstra Visualizer",
     tagline: "Interactive graph algorithm visualization",
-    description:
-      "Canvas-based tool for stepping through Dijkstra's shortest path algorithm. Users build custom weighted graphs, set source and target nodes, then watch the algorithm traverse step-by-step with highlighted paths.",
+    description: "Canvas-based tool for stepping through Dijkstra's shortest path algorithm. Users build custom weighted graphs, set source and target nodes, then watch the algorithm traverse step-by-step with highlighted paths.",
     category: "Algorithms · Visualization",
     tech: ["JavaScript", "Canvas API", "Graph Algorithms"],
     challenge: "Rendering smooth, correct step-by-step animations on raw HTML5 Canvas without framework overhead.",
@@ -133,22 +168,20 @@ const PROJECTS: Project[] = [
     accentColor: "rgba(251,113,133,0.1)",
   },
   {
-    id: 9,
+    id: 12,
     title: "AcademeX",
     tagline: "Academic GPA calculator with dual grading systems",
-    description:
-      "Python desktop application for academic grading and GPA computation. Supports absolute threshold grading and relative curve systems, calculates cumulative GPAs from grades and credits.",
+    description: "Python desktop application for academic grading and GPA computation. Supports absolute threshold grading and relative curve systems, calculates cumulative GPAs from grades and credits.",
     category: "Desktop · Python",
     tech: ["Python", "Tkinter", "Academic Tools"],
     challenge: "Building a flexible grading engine that correctly handles both absolute and relative curve systems simultaneously.",
     impact: "Solves real GPA calculation complexity for engineering students",
-    link: "https://github.com/esdrfgbv/AcadeMex.git",
+    github: "https://github.com/esdrfgbv/AcadeMex.git",
     image: getImg("sancahri.png"),
     accentColor: "rgba(52,211,153,0.1)",
   },
 ];
 
-// Expanded detail panel (same as before)
 interface DetailPanelProps {
   project: Project;
   onClose: () => void;
@@ -223,13 +256,20 @@ const DetailPanel = ({ project, onClose }: DetailPanelProps) => (
             </div>
           </div>
 
-          <div className="flex gap-3 pt-1">
-            <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm !py-2.5 !px-5">
-              View Live <ExternalLink size={13} />
-            </a>
+          <div className="flex flex-wrap gap-3 pt-1">
+            {project.link && project.link !== "#" && (
+              <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm !py-2.5 !px-5" onClick={e => e.stopPropagation()}>
+                View Live <ExternalLink size={13} />
+              </a>
+            )}
             {project.github && (
-              <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn-ghost text-sm !py-2.5 !px-5">
-                <Github size={13} /> GitHub
+              <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn-ghost text-sm !py-2.5 !px-5" onClick={e => e.stopPropagation()}>
+                <Github size={13} /> Source
+              </a>
+            )}
+            {project.details && (
+              <a href={project.details} target="_blank" rel="noopener noreferrer" className="btn-ghost text-sm !py-2.5 !px-5" onClick={e => e.stopPropagation()}>
+                <Info size={13} /> Case Study
               </a>
             )}
           </div>
@@ -242,13 +282,157 @@ const DetailPanel = ({ project, onClose }: DetailPanelProps) => (
 const ProjectStack3D = () => {
   const [expandedProject, setExpandedProject] = useState<Project | null>(null);
 
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const rotationRef = useRef(0);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const lastXRef = useRef(0);
+  const velocityRef = useRef(0);
+  const isHorizontalRef = useRef<boolean | null>(null);
+  const animationFrameRef = useRef<number>();
+
   // Custom CSS variables style object
   const sliderStyle = { "--quantity": PROJECTS.length } as React.CSSProperties;
 
+  // Handle browser back button for modal
+  useEffect(() => {
+    const handlePopState = () => {
+      setExpandedProject(null);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const openProject = (project: Project) => {
+    window.history.pushState({ modal: "project" }, "", "");
+    setExpandedProject(project);
+  };
+
+  const closeProject = () => {
+    if (window.history.state?.modal === "project") {
+      window.history.back();
+    } else {
+      setExpandedProject(null);
+    }
+  };
+
+  // JS-driven continuous rotation and drag handling
+  useEffect(() => {
+    let lastTime = performance.now();
+
+    const animate = (time: number) => {
+      const delta = time - lastTime;
+      lastTime = time;
+
+      // Only update rotation if modal is closed
+      if (!expandedProject) {
+        if (!isDraggingRef.current) {
+          // Apply velocity inertia
+          if (Math.abs(velocityRef.current) > 0.05) {
+            rotationRef.current += velocityRef.current;
+            velocityRef.current *= 0.95; // friction
+          } else {
+            // Auto run rotation (negative direction to match original CSS)
+            rotationRef.current -= (0.015 * delta);
+          }
+        }
+
+        // Apply transform to the slider ref directly
+        if (sliderRef.current) {
+          sliderRef.current.style.transform = `perspective(2500px) rotateX(-16deg) rotateY(${rotationRef.current}deg)`;
+        }
+      } else {
+        // Reset lastTime to avoid huge delta jumps when modal closes
+        lastTime = performance.now();
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [expandedProject]);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (expandedProject) return;
+
+    isDraggingRef.current = true;
+    startXRef.current = e.clientX;
+    startYRef.current = e.clientY;
+    lastXRef.current = e.clientX;
+    velocityRef.current = 0;
+    isHorizontalRef.current = null;
+
+    if (e.target instanceof Element) {
+      try {
+        e.target.setPointerCapture(e.pointerId);
+      } catch (err) {
+        // Ignore setPointerCapture errors on unmounted/invalid elements
+      }
+    }
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDraggingRef.current || expandedProject) return;
+
+    const deltaX = e.clientX - startXRef.current;
+    const deltaY = e.clientY - startYRef.current;
+
+    // Lock gesture direction after small movement threshold
+    if (isHorizontalRef.current === null) {
+      if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+        isHorizontalRef.current = Math.abs(deltaX) > Math.abs(deltaY);
+      }
+    }
+
+    if (isHorizontalRef.current) {
+      // Horizontal swipe
+      const moveDelta = e.clientX - lastXRef.current;
+
+      // Map pixels to rotation degrees
+      const degDelta = moveDelta * 0.4;
+
+      velocityRef.current = degDelta; // Base velocity for inertia
+      rotationRef.current += degDelta;
+
+      // Update immediately to avoid 1 frame lag
+      if (sliderRef.current) {
+        sliderRef.current.style.transform = `perspective(2500px) rotateX(-16deg) rotateY(${rotationRef.current}deg)`;
+      }
+
+      lastXRef.current = e.clientX;
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    isDraggingRef.current = false;
+    isHorizontalRef.current = null;
+
+    if (e.target instanceof Element) {
+      try {
+        e.target.releasePointerCapture(e.pointerId);
+      } catch (err) { }
+    }
+  };
+
   return (
-    <div className="relative w-full overflow-hidden flex items-center justify-center" style={{ height: "70vh", minHeight: "560px" }}>
-      {/* Container matching demo slider logic */}
+    <div
+      className="relative w-full overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing"
+      style={{ height: "70vh", minHeight: "560px", touchAction: "pan-y" }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+    >
       <div
+        ref={sliderRef}
         className="demo-slider absolute"
         style={{
           width: "250px",
@@ -263,11 +447,10 @@ const ProjectStack3D = () => {
           return (
             <div
               key={project.id}
-              className="item cursor-pointer group"
+              className="item group"
               style={itemStyle}
-              onClick={() => setExpandedProject(project)}
+              onClick={() => openProject(project)}
             >
-              {/* 3-Level Glassmorphism inside the card, maintaining premium look */}
               <div
                 className="absolute inset-0 rounded-xl"
                 style={{
@@ -287,7 +470,7 @@ const ProjectStack3D = () => {
                   boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
                 }}
               >
-                <div className="relative h-[160px] md:h-[180px] w-full shrink-0">
+                <div className="relative h-[160px] md:h-[180px] w-full shrink-0 pointer-events-none">
                   <img
                     src={project.image}
                     alt={project.title}
@@ -321,8 +504,7 @@ const ProjectStack3D = () => {
                   </div>
                 </div>
 
-                {/* Info block */}
-                <div className="flex flex-col flex-1 p-4 pt-2">
+                <div className="flex flex-col flex-1 p-4 pt-2 pointer-events-none">
                   <h3 className="font-display font-bold text-white text-lg tracking-tight mb-0.5 truncate">
                     {project.title}
                   </h3>
@@ -334,7 +516,6 @@ const ProjectStack3D = () => {
                     {project.description}
                   </p>
 
-                  {/* Tech pills */}
                   <div className="flex flex-wrap gap-1.5 mt-auto">
                     {project.tech.slice(0, 3).map((t) => (
                       <span
@@ -351,7 +532,6 @@ const ProjectStack3D = () => {
                     ))}
                   </div>
 
-                  {/* View Details hint on hover */}
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex justify-center w-full">
                     <span className="font-mono text-[9px] font-bold uppercase tracking-widest bg-[#60A5FA] text-black px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(96,165,250,0.5)]">
                       View Details
@@ -367,7 +547,7 @@ const ProjectStack3D = () => {
       {expandedProject && (
         <DetailPanel
           project={expandedProject}
-          onClose={() => setExpandedProject(null)}
+          onClose={closeProject}
         />
       )}
     </div>

@@ -363,23 +363,11 @@
 }
 
 /* 3D Demo Slider CSS */
+/* 3D Demo Slider CSS (JS Controlled now) */
 .demo-slider {
   transform-style: preserve-3d;
-  transform: perspective(2500px);
-  animation: autoRun 40s linear infinite;
-}
-
-.demo-slider:hover {
-  animation-play-state: paused;
-}
-
-@keyframes autoRun {
-  from {
-    transform: perspective(2500px) rotateX(-16deg) rotateY(0deg);
-  }
-  to {
-    transform: perspective(2500px) rotateX(-16deg) rotateY(-360deg);
-  }
+  transform: perspective(2500px) rotateX(-16deg);
+  /* JS will control rotateY */
 }
 
 .demo-slider .item {
@@ -393,4 +381,3 @@
     transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(550px);
   }
 }
-
